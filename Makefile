@@ -221,6 +221,23 @@ SYSDEV_LABS   = setup \
 		sysdev-mdev \
 		backup
 
+SYSDEV_LABS_BEAGLEBONE  = \
+		setup-beaglebone \
+		sysdev-toolchain \
+		sysdev-u-boot \
+		sysdev-kernel-fetch-and-patch \
+		sysdev-kernel-cross-compiling \
+		sysdev-tinysystem \
+		sysdev-block-filesystems \
+		sysdev-flash-filesystems \
+		sysdev-thirdparty \
+		sysdev-buildroot \
+		sysdev-application-development \
+		sysdev-application-debugging \
+		sysdev-real-time \
+		sysdev-mdev \
+		backup
+
 KERNEL_LABS   = setup \
 		kernel-sources \
 		kernel-module-environment \
@@ -375,6 +392,9 @@ LABS_CHAPTERS      = $(KERNEL_LABS)
 else ifeq ($(LABS),full-sysdev)
 LABS_VARSFILE      = common/sysdev-labs-vars.tex
 LABS_CHAPTERS      = $(SYSDEV_LABS)
+else ifeq ($(LABS),full-sysdev-beaglebone)
+LABS_VARSFILE      = common/sysdev-labs-vars.tex
+LABS_CHAPTERS      = $(SYSDEV_LABS_BEAGLEBONE)
 else ifeq ($(LABS),full-android)
 LABS_VARSFILE      = common/android-labs-vars.tex
 LABS_CHAPTERS      = $(ANDROID_LABS)
