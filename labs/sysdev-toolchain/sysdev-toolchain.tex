@@ -1,6 +1,5 @@
 \subchapter{Building a cross-compiling toolchain}{Objective: Learn how
-  to compile your own cross-compiling toolchain for the uClibc C
-  library}
+  to compile your own cross-compiling toolchain}
 
 After this lab, you will be able to:
 
@@ -11,7 +10,7 @@ After this lab, you will be able to:
 
 \section{Setup}
 
-Go to the \code{/home/<user>/felabs/sysdev/toolchain} directory.
+Go to the \code{/home/<user>/labs/crosstool-ng} directory.
 
 Make sure you have at least 2 GB of free disk space.
 
@@ -28,7 +27,7 @@ sudo apt-get clean
 
 \section{Getting Crosstool-ng}
 
-Get the latest 1.15.x release of Crosstool-ng at
+Get the latest 1.16.x release of Crosstool-ng at
 \url{http://crosstool-ng.org}. Expand the archive right in the current
 directory, and enter the Crosstool-ng source directory.
 
@@ -61,10 +60,10 @@ Crosstool-ng comes with a set of ready-made configuration files for
 various typical setups: Crosstool-ng calls them {\em samples}. They can be
 listed by using \code{./ct-ng list-samples}.
 
-We will use the arm-unknown-linux-uclibcgnueabi sample. It can be loaded by issuing:
+We will use the arm-cortex\_a8-linux-gnueabi sample. It can be loaded by issuing:
 
 \begin{verbatim}
-./ct-ng arm-unknown-linux-uclibcgnueabi
+./ct-ng arm-cortex_a8-linux-gnueabi
 \end{verbatim}
 
 Then, to refine the configuration, let's run the menuconfig interface:
@@ -79,6 +78,7 @@ In \code{Path and misc options}:
 \item Change \code{Prefix directory} to
   \code{/usr/local/xtools/${CT_TARGET}}. This is the place where
   the toolchain will be installed.
+\item Change \code{Local tarballs directory} to \code{$HOME/labs/crosstool-ng/sources}
 \item Set \code{Number of parallel jobs} to 2 times the number of CPU cores
   in your workstation\footnote{You can find this number by running \code{cat /proc/cpuinfo}}. Building your toolchain will be faster.
 \item Change \code{Maximum log level to see} to \code{DEBUG} so that we can have more
@@ -89,7 +89,7 @@ In \code{Toolchain options}:
 \begin{itemize}
 \item Set \code{Tuple's alias} to \code{arm-linux}. This way, we will be able
   to use the compiler as \code{arm-linux-gcc} instead of
-  \code{arm-unknown-linux-uclibcgnueabi-gcc}, which is much longer.
+  \code{arm-cortex_a8-linux-gnueabi-gcc}, which is much longer.
 \end{itemize}
 
 In \code{Debug facilities}:
@@ -111,8 +111,9 @@ above.
 First, create the directory \code{/usr/local/xtools/} and change its
 owner to your user, so that Crosstool-ng can write to it.
 
-Then, create the directory \code{$HOME/src} in which Crosstool-NG
-will save the tarballs it will download.
+Crosstool-NG will automatically download all the necessary tarballs.
+We already configured Crosstool-NG to look in the source folder;
+\code{$HOME/labs/crosstool-ng/sources/}, that way we don't have to download them.
 
 Nothing is simpler:
 
@@ -125,7 +126,7 @@ And wait!
 \section{Testing the toolchain}
 
 You can now test your toolchain by adding
-\code{/usr/local/xtools/arm-unknown-linux-uclibcgnueabi/bin/} to your
+\code{/usr/local/xtools/bin} to your
 \code{PATH} environment variable and compiling the simple
 \code{hello.c} program in your main lab directory with
 \code{arm-linux-gcc}.
