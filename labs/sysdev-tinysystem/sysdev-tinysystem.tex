@@ -6,7 +6,7 @@ After this lab, you will:
   directory on your workstation, shared through the network by NFS.
 \item be able to create and configure a minimalistic root filesystem
   from scratch (ex nihilo, out of nothing, entirely hand made...) for
-  the IGEP board
+  the BeagleBoard board
 \item understand how small and simple an embedded Linux system can be.
 \item be able to install BusyBox on this filesystem.
 \item be able to create a simple startup script based on /sbin/init.
@@ -35,7 +35,7 @@ target to test the impact of script or application updates.
 
 \section{Setup}
 
-Go to the \code{/home/<user>/felabs/sysdev/tinysystem/} directory.
+Go to the \code{/home/<user>/labs/busybox/} directory.
 
 Reuse kernel sources from the previous labs, copying them to the
 current directory.
@@ -60,7 +60,7 @@ options must be on the same line!)
 
 \footnotesize
 \begin{verbatim}
-/home/<user>/felabs/sysdev/tinysystem/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
+/home/<user>/labs/busybox/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
 \end{verbatim}
 \normalsize
 
@@ -83,12 +83,12 @@ Use the following U-Boot command to do so, in just 1 line
 \footnotesize
 \begin{verbatim}
 setenv bootargs console=ttyO2,115200 root=/dev/nfs ip=192.168.0.100 \
-   nfsroot=192.168.0.1:/home/<user>/felabs/sysdev/tinysystem/nfsroot
+   nfsroot=192.168.0.1:/home/<user>/labs/busybox/nfsroot
 \end{verbatim}
 \normalsize
 
 Of course, you need to adapt the IP addresses to your exact network
-setup. Save the environment variables (with \code{saveenv}).
+setup. Save the environment variables (in \code{uEnv.txt}).
 
 Now, boot your system. The kernel should be able to mount the root
 filesystem over NFS.
@@ -119,12 +119,7 @@ To configure BusyBox, we won't be able to use \code{make xconfig},
 which is currently broken in Ubuntu 12.04, because of Qt library
 dependencies.
 
-We are going to use \code{make gconfig} this time. Before doing this,
-install the required packages:
-
-\begin{verbatim}
-sudo apt-get install libglade2-dev
-\end{verbatim}
+We are going to use \code{make menuconfig}
 
 Now, configure BusyBox with the configuration file provided in the
 \code{data/} directory.
@@ -184,7 +179,7 @@ directory. Cross-compile it for ARM, dynamically-linked with the
 libraries, and run it on the target.
 
 You will first encounter a not found error caused by the absence of
-the \code{ld-uClibc.so.0} executable, which is the dynamic linker
+the \code{ld-xxxx.so.0} executable, which is the dynamic linker
 required to execute any program compiled with shared libraries. Using
 the find command (see examples in your command memento sheet), look
 for this file in the toolchain install directory, and copy it to the
