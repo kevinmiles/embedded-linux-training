@@ -1,5 +1,3 @@
-TODO change all igepv2 stuff to the beaglebone
-
 \subchapter{Bootloader - U-Boot}{Objectives: Set up serial
   communication, compile and install the X-Loader and U-Boot
   bootloaders, use basic U-Boot commands, set up TFTP communication
@@ -21,7 +19,7 @@ very specific to the hardware platform. There are usually two cases:
   which access to the memories is made easier.
 
 \end{itemize}
-The IGEPv2 board, which uses the DM3730 or the OMAP3530 processors, falls into
+The BeagleBone board, which uses the xxxx or the xxxx processors, falls into
 the second category. The monitor integrated in the ROM reads the MMC/SD
 card to search for a valid bootloader before looking at the internal
 NAND flash for a bootloader. Therefore, by using an MMC/SD card, we can
@@ -102,27 +100,14 @@ sudo mkfs.vfat -n boot -F 32 /dev/sdb1
 \end{verbatim}
 
 Then, remove and insert your card again.
-
 Your MMC/SD card is ready to use.
 
-TODO explain uboot SPL / xloader
-
-The resulting file is stored in the \code{x-loader} main directory as
-\code{x-load.bin}. This file must be {\em signed}\footnote{In fact,
-  for a General Purpose (GP) device, the signature only consists of
-  adding a “Table of Contents” at the beginning of the image,
-  explaining which program to execute. Signatures are using in variants
-  of the OMAP CPUs that implement some security features, which will refuse
-  to load an X-loader image that wasn't signed with an authorized key.}
-  in order to be executed by the processor. Using the \code{signGP} tool in the \code{contrib/}
-subdirectory, sign the \code{x-load.bin} file:
+The process to create 2 valid partitions on the SD card can also be done using the following script:
 
 \begin{verbatim}
-./contrib/signGP x-load.bin
+sudo ./mkcard.sh /dev/sd[x]
 \end{verbatim}
 
-This produces an \code{x-load.bin.ift} file. You can copy it to the
-MMC card, renaming it as \code{MLO}.
 
 \section{U-Boot setup}
 
@@ -158,7 +143,7 @@ Basically, you need to:
 
 \end{itemize}
 
-You can now copy the generated \code{u-boot.img} file to the MMC card.
+You can now copy the generated \code{u-boot.img} and \code{MLO} files to the MMC card.
 
 Unmount the MMC card partition.
 
@@ -186,36 +171,32 @@ you wish to exit picocom, press \code{[Ctrl][a]} followed by
 
 \section{Testing U-Boot on the MMC card}
 
-Insert the MMC card into the beaglebone board, reset the board and check
+Insert the MMC card into the BeagleBone board, reset the board and check
 that it boots your new bootloaders. You can verify this by checking
 the build dates:
 
 \begin{verbatim}
-Texas Instruments X-Loader 1.4.4-3 (May  4 2012 - 10:26:41)
-CPU Release: 0x2b89102f - 0x2
-XLoader: CPU status = 0xe00
-XLoader: Processor DM3730 - ES1.2
-XLoader: Memory Manufacturer: Micron (2c)
-Loading u-boot.bin from mmc
+U-Boot SPL 2012.10-rc1 (Oct 01 2012 - 16:13:08)
+Texas Instruments Revision detection unimplemented
+OMAP SD/MMC: 0
+reading u-boot.img
+reading u-boot.img
 
 
-U-Boot 2011.12 (May 04 2012 - 10:31:05)
+U-Boot 2012.10-rc1 (Oct 01 2012 - 16:13:08)
 
-OMAP36XX/37XX-GP ES1.2, CPU-OPP2, L3-165MHz, Max CPU Clock 1 Ghz
-IGEP v2 board + LPDDR/ONENAND
 I2C:   ready
-DRAM:  512 MiB
-NAND:  512 MiB
-MMC:   OMAP SD/MMC: 0
-In:    serial
-Out:   serial
-Err:   serial
-Die ID #1bd600029ff80000016842c80f03400d
-Net:   smc911x-0
+DRAM:  256 MiB
+WARNING: Caches not enabled
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+Using default environment
+
+Net:   cpsw
 Hit any key to stop autoboot:  3
+U-Boot#
 \end{verbatim}
 
-By the message {\em Loading u-boot.bin from mmc} you also get the
+By the message {\em Loading u-boot.img from mmc} you also get the
 confirmation that your U-Boot has correctly been loaded from the MMC
 device.
 
@@ -225,76 +206,6 @@ U-Boot #
 \end{verbatim}
 
 In U-Boot, type the \code{help} command, and explore the few commands available.
-
-\section{Reflashing from U-boot}
-
-We will first reflash the X-Loader in NAND. To do so, type the following commands:
-
-\begin{verbatim}
-mmc rescan
-\end{verbatim}
-
-This initializes the MMC interface
-
-\begin{verbatim}
-fatload mmc 0 80000000 MLO
-\end{verbatim}
-This loads the file from MMC 0 partition 0 to memory at address 0x80000000
-
-\begin{verbatim}
-nandecc hw
-\end{verbatim}
-
-This tells U-Boot to write data to NAND using the hardware ECC
-algorithm, which the ROM code of the OMAP uses to load X-Loader.
-
-\begin{verbatim}
-nand erase 0 80000
-\end{verbatim}
-
-This command erases a 0x80000 byte long space of NAND flash from offset 0
-
-\begin{verbatim}
-nand write 80000000 0 80000
-\end{verbatim}
-
-This command writes data to NAND flash. The source is 0x80000000
-(where we've loaded the file to store in the flash) and the
-destination is offset 0 of NAND flash. The length of the copy is
-0x80000 bytes, which corresponds to the space we've just erased
-before. It is important to erase the flash space before trying to
-write on it.
-
-Now that X-Loader has been transfered to NAND flash, you can now do the same
-with U-Boot.
-
-You will have to flash U-Boot to NAND with the software ECC algorithm, which
-X-Loader uses to load U-Boot from NAND. This can be achieved by
-running the below command:
-
-\begin{verbatim}
-nandecc sw
-\end{verbatim}
-
-The storage offset in NAND is 0x80000 (just after
-the space reserved for X-Loader) and the length is 0x180000.
-
-After flashing the U-Boot image, also erase the U-boot environment
-variables defined by the manufacturer or by previous users of your
-board:
-
-\begin{verbatim}
-nand erase 200000 80000
-\end{verbatim}
-
-You can remove MMC card, then reset the IGEP board. You should see the
-freshly flashed X-Loader and U-Boot starting.
-
-You should now see the U-Boot prompt:
-
-\begin{verbatim}
-U-Boot #
-\end{verbatim}
 
 \section{Setting up Ethernet communication}
 
@@ -361,6 +272,9 @@ To make these settings permanent, save the environment:
 saveenv
 \end{verbatim}
 
+This command only works if you board has NAND memory, which the BeagleBone doesn't have.
+To configure U-Boot on the BeagleBone, we need a file called \code{uEnv.txt} on he first parition of the SD-card.
+
 Now switch your board off and on again\footnote{Power cycling your
   board is needed to make your ethaddr permanent, for obscure
   reasons. If you don't, U-boot will complain that ethaddr is not
@@ -371,17 +285,16 @@ the directory exported through TFTP on your development
 workstation. Then, from U-Boot, do:
 
 \begin{verbatim}
-tftp 0x80000000 textfile.txt
+tftp 0x80200000 textfile.txt
 \end{verbatim}
 
 This should download the file \code{textfile.txt} from your development
-workstation into the board's memory at location 0x80000000 (this
+workstation into the board's memory at location 0x80200000 (this
 location is part of the board DRAM). You can verify that the download
 was successful by dumping the contents of the memory:
 
 \begin{verbatim}
-md 0x80000000
+md 0x80200000
 \end{verbatim}
 
-We will see in the next labs how to use U-Boot to download, flash and
-boot a kernel.
+We will see in the next labs how to use U-Boot to download and boot a kernel.

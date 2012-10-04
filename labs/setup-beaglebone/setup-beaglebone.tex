@@ -11,18 +11,15 @@ sudo apt-get dist-upgrade
 \end{verbatim}
 
 \section{Install lab data}
-TODO create our own and folder structure and tarball + sources
-
 For the different labs in the training, your instructor has prepared a
 set of data (kernel images, kernel configurations, root filesystems
 and more). The tarball with the labs material will be given to you by
 your instructor.
 
 \begin{verbatim}
-cd
 sudo apt-get install xz-utils
 sudo tar Jxf labs.tar.xz
-sudo chown -R <user>.<user> felabs
+sudo chown -R <user>.<user> labs
 \end{verbatim}
 
 Note that using \code{root} permissions are required to extract the

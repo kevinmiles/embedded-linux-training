@@ -20,7 +20,7 @@ is needed to build the \code{uImage} kernel image file for U-Boot.
 
 \section{Target system}
 
-We are going to cross-compile and boot a Linux kernel for the IGEPv2
+We are going to cross-compile and boot a Linux kernel for the BeagleBone
 board.
 
 \section{Cross-compiling environment setup}
@@ -40,15 +40,14 @@ platform using the above toolchain.
 
 \section{Linux kernel configuration}
 
-????
 By running \code{make help}, find the proper Makefile target to
-configure the kernel for the beaglebone board (hint: the default
+configure the kernel for the BeagleBone board (hint: the default
 configuration is not named after the board, but after the CPU
 name). Once found, use this target to configure the kernel with the
 ready-made configuration.
 
 Don't hesitate to visualize the new settings by running
-\code{make menuconfig} afterwards!
+\code{make menuconfig} or \code{make xconfig} afterwards!
 
 For later use, we need to edit a bit the configuration. Change the
 kernel compression from Gzip to LZMA. This compression algorithm is
@@ -81,7 +80,7 @@ make uImage
 
 \section{Setting up serial communication with the board}
 
-Plug the beaglebone board on your computer. Start Picocom on \code{/dev/ttyUSB1}
+Plug the BeagleBone board on your computer. Start Picocom on \code{/dev/ttyUSB1}
 
 You should now see the U-Boot prompt:
 
@@ -89,18 +88,9 @@ You should now see the U-Boot prompt:
 U-Boot #
 \end{verbatim}
 
-Make sure that the bootargs U-Boot environment variable is not set (it
-could remain from a previous training session, and this could disturb
-the next lab):
-
-\begin{verbatim}
-setenv bootargs
-saveenv
-\end{verbatim}
-
 \section{Load and boot the kernel using U-Boot}
 
-We will use TFTP to load the kernel image to the IGEP board:
+We will use TFTP to load the kernel image to the BeagleBone board:
 
 \begin{itemize}
 
@@ -108,11 +98,11 @@ We will use TFTP to load the kernel image to the IGEP board:
   directory exposed by the TFP server.
 
 \item On the target, load \code{uImage} from TFTP into RAM at address
-  0x80000000:\\
-  \code{tftp 0x80000000 uImage}
+  0x80200000:\\
+  \code{tftp 0x80200000 uImage}
 
 \item Boot the kernel:\\
-  \code{bootm 0x80000000}
+  \code{bootm 0x80200000}
 
 \end{itemize}
 
@@ -126,10 +116,10 @@ This is expected: we haven't provided a working root filesystem for
 our device yet.
 
 You can automate now all this every time the board is booted or
-reset. Reset the board, and specify a different \code{bootcmd}:
+reset. Disconnect the board and remove the SD card.
 
-\begin{verbatim}
-setenv bootcmd 'tftp 80000000 uImage;bootm 80000000'
-saveenv
-\end{verbatim}
+On the first partition of the SD card create the file \code{uEnv.txt}.
+Here you can configure all variables, except \code{bootcmd}, the reason is that command reads in the configuration file \code{uEnv.txt}. If you want to change it you have to recompile U-Boot.
+
+You can use commands that the \code{bootcmd} variables call and configure those in \code{uEnv.txt} to automate \code{'tftp 80200000 uImage;bootm 80200000'}
 
