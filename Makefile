@@ -221,7 +221,6 @@ SYSDEV_LABS   = setup \
 		sysdev-mdev \
 		backup
 
-# TODO add openembedded
 SYSDEV_LABS_BEAGLEBONE  = \
 		setup-beaglebone \
 		sysdev-toolchain \
@@ -234,6 +233,7 @@ SYSDEV_LABS_BEAGLEBONE  = \
 		sysdev-thirdparty \
 		sysdev-application-development \
 		sysdev-application-debugging \
+		sysdev-angstrom \
 		sysdev-mdev \
 		backup
 

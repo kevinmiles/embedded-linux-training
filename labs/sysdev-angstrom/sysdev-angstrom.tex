@@ -1,0 +1,76 @@
+\subchapter{Using a build system, example with OpenEmbedded}{Objectives:
+  discover how a build system is used and how it works, with the
+  example of the OpenEmbedded build system. Build a Linux system with
+  libraries and make it work on the target device, the BeagleBone.}
+
+\section{Setup}
+
+Go into the \code{/home/<user>/labs/} directory.
+
+Check out the git repository from the The Angstrom Distribution
+
+\begin{verbatim}
+git clone git://github.com/Angstrom-distribution/setup-scripts.git angstrom
+\end{verbatim}
+
+Configure the Angstrom Distribution for the BeagleBone
+
+\begin{verbatim}
+MACHINE=beaglebone ./oebb.sh config beaglebone
+MACHINE=beaglebone ./oebb.sh update
+\end{verbatim}
+
+\section{Build the toolchain and the kernel}
+
+Source the script which Angstrom generates,
+so we don't have to use the wrapper script \code{oebb.sh} anymore.
+
+\begin{verbatim}
+. ~/.oe/environment-angstromv2012.05
+\end{verbatim}
+
+To build the toolchain and kernel:
+\begin{verbatim}
+bitbake virtual/kernel
+\end{verbatim}
+
+If you don't have the required libraries installed,
+bitbake will exit and show what libraries or tools you are missing.
+
+You can install the required packages with apt-get:
+
+\begin{verbatim}
+sudo apt-get install <package1> <packages2> ..
+\end{verbatim}
+
+\section{Generate the embedded Linux system}
+
+For a console image just run:
+
+\begin{verbatim}
+bitbake console-image
+\end{verbatim}
+
+To check which applications are included
+Go to \code{~/labs/angstrom/sources/meta-angstrom/recipes-images/angstrom} and open the \code{console-image.bb} file.
+
+\begin{verbatim}
+#Angstrom bootstrap image
+require console-base-image.bb
+
+DEPENDS += "task-base-extended \
+       "
+
+IMAGE_INSTALL += "task-base-extended \
+        "
+
+export IMAGE_BASENAME = "console-image"
+\end{verbatim}
+
+
+The file is almost empty but you will see the line \code{require console-base-image.bb}. To see how it's configured check the \code{console-base.image.bb} file.
+
+If you to create your own image, you can copy the the \code{console-image.bb} file and add packages to \code{IMAGE_INSTALL}.
+
+When the build of the console-image is finished you can see the result in
+\code{~/labs/angstrom/build/tmp-angstrom_v2012_05-eglibc/deploy/images/beaglebone}
