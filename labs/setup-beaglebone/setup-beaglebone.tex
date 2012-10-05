@@ -17,13 +17,11 @@ and more). The tarball with the labs material will be given to you by
 your instructor.
 
 \begin{verbatim}
-sudo apt-get install xz-utils
-sudo tar Jxf labs.tar.xz
-sudo chown -R <user>.<user> labs
+mkdir labs
+apt-get install xz-utils
+tar xJf labs.tar.xz -C labs
+chown -R <user>.<user> labs
 \end{verbatim}
-
-Note that using \code{root} permissions are required to extract the
-character and block device files contained in the lab structure.
 
 Lab data are now available in an \code{labs} directory in your home
 directory. For each lab there is a directory containing various
