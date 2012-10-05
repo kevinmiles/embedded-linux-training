@@ -234,8 +234,7 @@ SYSDEV_LABS_BEAGLEBONE  = \
 		sysdev-application-development \
 		sysdev-application-debugging \
 		sysdev-angstrom \
-		sysdev-mdev \
-		backup
+		sysdev-mdev
 
 KERNEL_LABS   = setup \
 		kernel-sources \
