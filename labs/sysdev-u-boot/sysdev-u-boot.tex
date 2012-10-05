@@ -149,7 +149,7 @@ Unmount the MMC card partition.
 
 \section{Setting up serial communication with the board}
 
-Plug the beaglebone on your computer using the USB cable.
+Plug the BeagleBone on your computer using the USB cable.
 When plugged-in, two USB-to-serial devices should appear.
 \code{/dev/ttyUSB0} is the onboard JTAG.
 \code{/dev/ttyUSB1} is a USB-to-serial device.
@@ -298,3 +298,45 @@ md 0x80200000
 \end{verbatim}
 
 We will see in the next labs how to use U-Boot to download and boot a kernel.
+
+\section{Flashing the kernel in NAND flash}
+
+NOTE: This section is for the IGEPv2 board (BeagleBone doesn't have NAND)
+
+In order to let the kernel boot on the board autonomously, we can
+flash it in the NAND flash available on the IGEP. The NAND flash can
+be manipulated in U-Boot using the \code{nand} command, which
+features several subcommands. Run \code{help nand} to see the
+available subcommands and their options.
+
+After storing the X-loader, U-boot and its environment variables, we
+will keep a special area in NAND flash for the Linux kernel image.
+This 4th partition will be 4 MiB big, from NAND address
+0x280000 to 0x680000.
+
+So, let's start by erasing the corresponding 4 MiB of NAND flash:
+
+\begin{verbatim}
+nand erase 0x280000 0x400000
+         (NAND addr) (size)
+\end{verbatim}
+
+Then, copy the kernel from TFTP into memory, using the same address as
+before.
+
+Then, flash the kernel image:
+
+\begin{verbatim}
+nand write 0x80000000 0x280000 0x400000
+           (RAM addr)   (NAND addr) (size)
+\end{verbatim}
+
+Power your board off and on, to clear RAM contents. We should now be able to load
+the kernel image from NAND and boot it using:
+
+\begin{verbatim}
+nand read 0x80000000  0x280000    0x400000
+          (RAM addr)   (NAND addr) (size)
+bootm 0x80000000
+\end{verbatim}
+
