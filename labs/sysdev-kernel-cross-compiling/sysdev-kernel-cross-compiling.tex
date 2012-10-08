@@ -12,6 +12,11 @@ After this lab, you will be able to:
 \section{Setup}
 
 Go to the \code{/home/<user>/labs/kernel} directory.
+Extract \code{kernel-angstrom.tar.gz} in the current folder.
+
+\begin{verbatim}
+tar -xf kernel-angstrom.tar.gz
+\end{verbatim}
 
 Install the following packages: \code{libqt4-dev} and
 \code{u-boot-tools}. \code{libqt4-dev} is needed for the
@@ -49,12 +54,26 @@ ready-made configuration.
 Don't hesitate to visualize the new settings by running
 \code{make menuconfig} or \code{make xconfig} afterwards!
 
+There is a config provided, the \code{defconfig} file in the \code{~/labs/kernel} folder.
+To use the config file do the following:
+
+\begin{verbatim}
+make distclean
+cp defconfig .config
+make oldconfig
+\end{verbatim}
+
 For later use, we need to edit a bit the configuration. Change the
 kernel compression from Gzip to LZMA. This compression algorithm is
 far more efficient than Gzip, in terms of compression ratio, at the
 expense of a higher decompression time.
 
 \section{Cross compiling}
+
+Before we compile the kernel, we need to copy a firmware file the correct source folder.
+\begin{verbatim}
+cp am335x-pm-firmware.bin firmware/am335x-pm-firmware.bin
+\end{verbatim}
 
 You're now ready to cross-compile your kernel. Simply run:
 
