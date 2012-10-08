@@ -35,10 +35,22 @@ target to test the impact of script or application updates.
 
 \section{Setup}
 
-Go to the \code{/home/<user>/labs/busybox/} directory.
+U-Boot and the kernel are built with our own cross compiler.
+To build BusyBox and all following applications and libs, we are going the use another cross copiler.
 
-Reuse kernel sources from the previous labs, copying them to the
-current directory.
+Go to the \code{/home/<user>/labs/toolchain/} directory.
+Extract the tarball and add the compiler to your PATH variable.
+on't forget the remove the other cross compiler.
+
+\begin{verbatim}
+tar -xf angstrom-2011.03-i686-linux-armv7a-linux-gnueabi-toolchain.tar.bz2
+export PATH=$PATH:~/labs/toolchain/usr/local/angstrom/arm/bin/
+\end{verbatim}
+
+To keep the \code{PATH} variable edit your \code{.bashrc} file in your home directory.
+Remember not the use \code{arm-linux-} anymore, but use \code{arm-angstrom-linux-gnueabi-} for the \code{CROSS_COMPILE} variable.
+
+Now go to the \code{/home/<user>/labs/busybox/} directory.
 
 \section{Kernel configuration}
 
@@ -121,8 +133,10 @@ dependencies.
 
 We are going to use \code{make menuconfig}
 
-Now, configure BusyBox with the configuration file provided in the
-\code{data/} directory.
+Now, configure BusyBox with the default config, by running the following commands.
+\begin{verbatim}
+make defconfig
+\end{verbatim}
 
 At least, make sure you build BusyBox statically! Compiling Busybox
 statically in the first place makes it easy to set up the system,
