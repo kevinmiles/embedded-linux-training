@@ -150,10 +150,10 @@ obviously not what we want, so we tell the configure script to use the
 ARM cross-compiler:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure
+CC=arm-angstrom-linux-gnueabi-gcc ./configure
 \end{verbatim}
 
-Of course, the \code{arm-linux-gcc} cross-compiler must be in your
+Of course, the \code{arm-angstrom-linux-gnueabi-gcc} cross-compiler must be in your
 PATH prior to running the configure script. The CC environment
 variable is the classical name for specifying the compiler to
 use. Moreover, the beginning of the configure script tells us about
@@ -181,7 +181,7 @@ It can be used to compile applications linked statically with the zlib
 library, as shown by the compilation of the example program:
 
 \begin{verbatim}
-arm-linux-gcc -O3 -DUSE_MMAP -o example example.o -L. libz.a
+arm-angstrom-linux-gnueabi-gcc -O3 -DUSE_MMAP -o example example.o -L. libz.a
 \end{verbatim}
 
 In addition to this static library, there is also a dynamic version of
@@ -190,7 +190,7 @@ the library, the \code{libz.so*} files. The shared library itself is
 line:
 
 \begin{verbatim}
-arm-linux-gcc -shared -Wl,-soname,libz.so.1 -o libz.so.1.2.5 \
+arm-angstrom-linux-gnueabi-gcc -shared -Wl,-soname,libz.so.1 -o libz.so.1.2.5 \
               adler32.o compress.o crc32.o gzio.o uncompr.o  \
               deflate.o trees.o zutil.o inflate.o infback.o  \
               inftrees.o inffast.o
@@ -223,7 +223,7 @@ These symlinks are needed for two different reasons:
 
 To know what's the {\em SONAME} of a library, you can use:
 \begin{verbatim}
-arm-linux-readelf -d libz.so.1.2.5
+arm-angstrom-linux-gnueabi-readelf -d libz.so.1.2.5
 \end{verbatim}
 
 and look at the \code{(SONAME)} line. You'll also see that this
@@ -251,7 +251,7 @@ the libraries to be installed in the \code{/usr} prefix, so let's tell
 the configure script about this:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure --prefix=/usr
+CC=arm-angstrom-linux-gnueabi-gcc ./configure --prefix=/usr
 make
 \end{verbatim}
 
@@ -300,7 +300,7 @@ Finally, let's install the library in the {\em target} space:
 \item Copy the dynamic version of the library. Only \code{libz.so.1} and \code{libz.so.1.2.5} are needed, since \code{libz.so.1} is the {\em SONAME} of the library and \code{libz.so.1.2.5} is the real binary:\\
   \code{cp -a libz.so.1* ../target/usr/lib}
 \item Strip the library:\\
-  \code{arm-linux-strip ../target/usr/lib/libz.so.1.2.5}
+  \code{arm-angstrom-linux-gnueabi-strip ../target/usr/lib/libz.so.1.2.5}
 \end{enumerate}
 
 Ok, we're done with zlib!
@@ -322,7 +322,7 @@ what we want. So let's tell the build system to use the
 cross-compiler:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure
+CC=arm-angstrom-linux-gnueabi-gcc ./configure
 \end{verbatim}
 
 Quickly, you should get an error saying:
@@ -333,7 +333,7 @@ If you meant to cross compile, use `--host'.
 See `config.log' for more details.
 If you look at config.log, you quickly understand what's going on:
 configure:2942: checking for C compiler default output file name
-configure:2964: arm-linux-gcc    conftest.c  >&5
+configure:2964: arm-angstrom-linux-gnueabi-gcc    conftest.c  >&5
 configure:2968: $? = 0
 configure:3006: result: a.out
 configure:3023: checking whether the C compiler works
@@ -372,7 +372,7 @@ for more details on these options.
 So, let's override the value of the \code{--host} option:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure --host=arm-linux
+CC=arm-angstrom-linux-gnueabi-gcc ./configure --host=arm-linux
 \end{verbatim}
 
 Now, we go a little bit further in the execution of the configure
@@ -389,7 +389,7 @@ to do:
 \footnotesize
 \begin{verbatim}
 configure:12452: checking for zlibVersion in -lz
-configure:12487: arm-linux-gcc -o conftest -g -O2   conftest.c -lz  -lm  >&5
+configure:12487: arm-angstrom-linux-gnueabi-gcc -o conftest -g -O2   conftest.c -lz  -lm  >&5
 /usr/local/xtools/arm-unknown-linux-uclibcgnueabi/[...]usr/bin/[...]/ld: cannot find -lz
 collect2: ld returned 1 exit status
 \end{verbatim}
@@ -415,7 +415,7 @@ Let's use this \code{LDFLAGS} variable:
 
 \begin{verbatim}
 LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
-CC=arm-linux-gcc \
+CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux
 \end{verbatim}
 
@@ -424,7 +424,7 @@ installed in \code{/usr} and not \code{/usr/local}:
 
 \begin{verbatim}
  LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
- CC=arm-linux-gcc \
+ CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux --prefix=/usr
 \end{verbatim}
 
@@ -453,7 +453,7 @@ Let's use it:
 \begin{verbatim}
 LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
 CPPFLAGS=-I/home/<user>/labs/thirdparty/staging/usr/include \
-CC=arm-linux-gcc \
+CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux --prefix=/usr
 \end{verbatim}
 
@@ -579,7 +579,7 @@ space, manually:
 \begin{verbatim}
 cd ..
 cp -a staging/usr/lib/libpng14.so.* target/usr/lib
-arm-linux-strip target/usr/lib/libpng14.so.14.3.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libpng14.so.14.3.0
 \end{verbatim}
 
 And we're finally done with libpng!
@@ -593,7 +593,7 @@ Configuring {\em libjpeg} is very similar to the configuration of the
 previous libraries:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure --host=arm-linux \
+CC=arm-angstrom-linux-gnueabi-gcc ./configure --host=arm-linux \
                              --prefix=/usr
 \end{verbatim}
 
@@ -616,7 +616,7 @@ And finally, install manually the only needed files at runtime in the
 \begin{verbatim}
 cd ..
 cp -a staging/usr/lib/libjpeg.so.8* target/usr/lib/
-arm-linux-strip target/usr/lib/libjpeg.so.8.0.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libjpeg.so.8.0.0
 \end{verbatim}
 
 Done with libjpeg!
@@ -632,7 +632,7 @@ good usage of the autotools. Cross-compiling FreeType is very
 easy. First, the configure step:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure --host=arm-linux  \
+CC=arm-angstrom-linux-gnueabi-gcc ./configure --host=arm-linux  \
                              --prefix=/usr
 \end{verbatim}
 
@@ -653,7 +653,7 @@ And install only the required files in the {\em target} space:
 \begin{verbatim}
 cd ..
 cp -a staging/usr/lib/libfreetype.so.6* target/usr/lib/
-arm-linux-strip target/usr/lib/libfreetype.so.6.6.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libfreetype.so.6.6.0
 \end{verbatim}
 
 Done with FreeType!
@@ -687,7 +687,7 @@ available. We see that:
 So, let's begin with a configure line like:
 
 \begin{verbatim}
-CC=arm-linux-gcc ./configure --host=arm-linux \
+CC=arm-angstrom-linux-gnueabi-gcc ./configure --host=arm-linux \
         --prefix=/usr --with-gfxdrivers=none \
         --with-inputdrivers=keyboard,linuxinput
 \end{verbatim}
@@ -703,7 +703,7 @@ So let's look in config.log for the JPEG issue. By search for
 
 \footnotesize
 \begin{verbatim}
-configure:24701: arm-linux-gcc -o conftest [...] conftest.c -ljpeg  -ldl -lpthread  >&5
+configure:24701: arm-angstrom-linux-gnueabi-gcc -o conftest [...] conftest.c -ljpeg  -ldl -lpthread  >&5
 /usr/local/xtools/arm-unknown-linux-uclibcgnueabi/[...]/bin/ld: cannot find -ljpeg
 \end{verbatim}
 \normalsize
@@ -716,7 +716,7 @@ are. So let's configure again with:
 \begin{verbatim}
 LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
 CPPFLAGS=-I/home/<user>/labs/thirdparty/staging/usr/include \
-CC=arm-linux-gcc \
+CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux --prefix=/usr \
  --with-gfxdrivers=none --with-inputdrivers=keyboard,linuxinput
 \end{verbatim}
@@ -787,7 +787,7 @@ LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
 CPPFLAGS=-I/home/<user>/labs/thirdparty/staging/usr/include \
 PKG_CONFIG_PATH=/home/<user>/labs/thirdparty/staging/usr/lib/pkgconfig \
 PKG_CONFIG_SYSROOT_DIR=/home/<user>/labs/thirdparty/staging \
-CC=arm-linux-gcc \
+CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux --prefix=/usr \
  --with-gfxdrivers=none --with-inputdrivers=keyboard,linuxinput
 \end{verbatim}
@@ -861,9 +861,9 @@ cd ..
 cp -a staging/usr/lib/libdirect-1.4.so.5* target/usr/lib
 cp -a staging/usr/lib/libdirectfb-1.4.so.5* target/usr/lib
 cp -a staging/usr/lib/libfusion-1.4.so.5* target/usr/lib
-arm-linux-strip target/usr/lib/libdirect-1.4.so.5.0.0
-arm-linux-strip target/usr/lib/libdirectfb-1.4.so.5.0.0
-arm-linux-strip target/usr/lib/libfusion-1.4.so.5.0.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libdirect-1.4.so.5.0.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libdirectfb-1.4.so.5.0.0
+arm-angstrom-linux-gnueabi-strip target/usr/lib/libfusion-1.4.so.5.0.0
 \end{verbatim}
 \normalsize
 
@@ -876,7 +876,7 @@ arm-linux-strip target/usr/lib/libfusion-1.4.so.5.0.0
 \begin{verbatim}
 cp -a staging/usr/lib/directfb-1.4-5/ target/usr/lib
 find target/usr/lib/directfb-1.4-5/ -name '*.la' -exec rm {} \;
-find target/usr/lib/directfb-1.4-5/ -name '*.so' -exec arm-linux-strip {} \;
+find target/usr/lib/directfb-1.4-5/ -name '*.so' -exec arm-angstrom-linux-gnueabi-strip {} \;
 \end{verbatim}
 \normalsize
 
@@ -898,7 +898,7 @@ LDFLAGS=-L/home/<user>/labs/thirdparty/staging/usr/lib \
 CPPFLAGS=-I/home/<user>/labs/thirdparty/staging/usr/include \
 PKG_CONFIG_PATH=/home/<user>/labs/thirdparty/staging/usr/lib/pkgconfig \
 PKG_CONFIG_SYSROOT_DIR=/home/<user>/labs/thirdparty/staging \
-CC=arm-linux-gcc \
+CC=arm-angstrom-linux-gnueabi-gcc \
 ./configure --host=arm-linux --prefix=/usr
 \end{verbatim}
 \normalsize
@@ -933,7 +933,7 @@ stripping is an architecture-dependent operation (\code{STRIP}
 variable):
 
 \begin{verbatim}
-make STRIP=arm-linux-strip \
+make STRIP=arm-angstrom-linux-gnueabi-strip \
      DESTDIR=/home/<user>/labs/thirdparty/target/ install-strip
 \end{verbatim}
 
@@ -947,7 +947,7 @@ The application will fail to run, because the {\em pthread} library
 available inside the toolchain. So let's add it to the target:
 
 \begin{verbatim}
-TOOLCHAIN_SYSROOT=$(arm-linux-gcc -print-sysroot)
+TOOLCHAIN_SYSROOT=$(arm-angstrom-linux-gnueabi-gcc -print-sysroot)
 cp -a $TOOLCHAIN_SYSROOT/lib/libpthread* target/lib/
 \end{verbatim}
 
