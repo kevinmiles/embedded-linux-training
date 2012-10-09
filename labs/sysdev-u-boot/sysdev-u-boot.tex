@@ -94,7 +94,7 @@ Check the script to see what it does and what commands are used.
 
 We will use U-Boot 2012.10-rc1 because it has better support for the beaglebone than the latest stable release; 2012.07.
 
-Go to the \code{/home/<user>/labs/u-boot/} directory.
+Go to the \code{/home/<user>/labs/bootloader/} directory.
 
 \begin{verbatim}
 tar xzvf u-boot-2012.10-rc1.tar.gz
@@ -114,7 +114,7 @@ Basically, you need to:
 \item run \code{make <NAME>_config}, where \code{<NAME>} is the name
   of a configuration file in \code{include/configs/}. For our
   platform, the configuration file is
-  \code{include/configs/am3517_evm.h}. Read this file to get an idea of
+  \code{include/configs/am335x_evm.h}. Read this file to get an idea of
   how a U-Boot configuration file is written;
 
 \item Finally, run \code{make}\footnote{You can speed up the compiling
