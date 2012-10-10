@@ -48,8 +48,10 @@ sudo apt-get install <package1> <packages2> ..
 For a console image just run:
 
 \begin{verbatim}
-bitbake console-image
+bitbake systemd-image
 \end{verbatim}
+
+\emph{NOTE: Before the change to the systemd init system this was \code{bitbake console-image}}
 
 To check which applications are included
 Go to \code{~/labs/angstrom/sources/meta-angstrom/recipes-images/angstrom} and open the \code{console-image.bb} file.
