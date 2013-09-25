@@ -52,7 +52,7 @@ is needed to build the uImage file for U-boot (\code{mkimage} utility).
 
 We are going to install a cross-compiling toolchain from
 Linaro\footnote{Note that Linaro toolchains by default generate code
-for the {\em armv7} instruction set, while our AT91 CPU only supports
+for the {\em armv7} instruction set. If you have a cpu that for example uses
 {\em armv5}. This is not a problem, as the kernel \code{Makefile} will
 invoke the cross-compiler with the right instruction set settings.}, a
 very popular source for ARM toolchains (amongst other useful resources
@@ -76,7 +76,7 @@ platform and to use your cross-compiler, either by modifying the
 kernel \code{Makefile} or by setting environment variables.
 
 Configure this kernel with the ready-made configuration for boards
-with the AT91SAM9263 CPU.
+with the AM335x CPU.
 
 Make sure that this configuration has \code{CONFIG_ROOT_NFS=y} (support
 booting on an NFS exported root directory).
@@ -96,13 +96,13 @@ make uImage
 Install the NFS server by installing the nfs-kernel-server
 package. Once installed, edit the \code{/etc/exports} file as
 \code{root} to add the following lines, assuming that the IP address
-of your board will be \code{192.168.0.100}:
+of your board will be \code{192.168.7.2}:
 
 \scriptsize
 \begin{verbatim}
-/home/<user>/felabs/linux/modules/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
-/home/<user>/felabs/linux/character/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
-/home/<user>/felabs/linux/debugging/nfsroot 192.168.0.100(rw,no_root_squash,no_subtree_check)
+/home/<user>/felabs/linux/modules/nfsroot 192.168.7.2(rw,no_root_squash,no_subtree_check)
+/home/<user>/felabs/linux/character/nfsroot 192.168.7.2(rw,no_root_squash,no_subtree_check)
+/home/<user>/felabs/linux/debugging/nfsroot 192.168.7.2(rw,no_root_squash,no_subtree_check)
 \end{verbatim}
 \normalsize
 
@@ -114,12 +114,9 @@ sudo /etc/init.d/nfs-kernel-server restart
 
 \section{Setting up serial communication with the board}
 
-Plug the Calao board on your computer using its USB-A connector. When
-plugged-in, two serial ports should appear, \code{/dev/ttyUSB0} and
-\code{/dev/ttyUSB1}. \code{/dev/ttyUSB0} is used for the JTAG while
-\code{/dev/ttyUSB1} corresponds to the {\em DBGU}, the debugging
-serial port of the AT91 processor. You can also see this device appear
-by looking at the output of \code{dmesg}.
+Plug your USB serial cable board on your computer using its USB connector. When
+plugged-in, a serial ports should appear, \code{/dev/ttyUSB0}.
+You can also see this device appear by looking at the output of \code{dmesg}.
 
 To communicate with the board through the serial port, install a serial communication program, such as \code{picocom}:
 
@@ -127,8 +124,8 @@ To communicate with the board through the serial port, install a serial communic
 sudo apt-get install picocom
 \end{verbatim}
 
-Run \code{picocom -b 115200 /dev/ttyUSB1}, to start a serial
-communication on \code{/dev/ttyUSB1}, with a baudrate of 115200. If
+Run \code{picocom -b 115200 /dev/ttyUSB0}, to start a serial
+communication on \code{/dev/ttyUSB0}, with a baudrate of 115200. If
 you wish to exit picocom, press \code{[Ctrl][a]} followed by
 \code{[Ctrl][x]}.
 
@@ -189,8 +186,8 @@ Now, configure the network on the board in U-Boot by setting the
 \code{ipaddr} and \code{serverip} environment variables:
 
 \begin{verbatim}
-setenv ipaddr 192.168.0.100
-setenv serverip 192.168.0.1
+setenv ipaddr 192.168.7.2
+setenv serverip 192.168.7.1
 \end{verbatim}
 
 In case the board was previously configured in a different way, we
@@ -233,8 +230,8 @@ command to do so (in just 1 line):
 
 \scriptsize
 \begin{verbatim}
-setenv bootargs root=/dev/nfs ip=192.168.0.100
-  nfsroot=192.168.0.1:/home/<user>/felabs/linux/modules/nfsroot
+setenv bootargs root=/dev/nfs ip=192.168.7.2
+  nfsroot=192.168.7.1:/home/<user>/felabs/linux/modules/nfsroot
 \end{verbatim}
 \normalsize
 
