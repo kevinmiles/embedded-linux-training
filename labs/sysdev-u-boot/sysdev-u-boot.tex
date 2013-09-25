@@ -92,14 +92,23 @@ Check the script to see what it does and what commands are used.
 
 \section{U-Boot setup}
 
-We will use U-Boot 2012.10-rc1 because it has better support for the beaglebone than the latest stable release; 2012.07.
+We will use U-Boot v2013.07, plus a patch to fix some issues specific for the beaglebone.
 
 Go to the \code{/home/<user>/labs/bootloader/} directory.
 
 \begin{verbatim}
-tar xzvf u-boot-2012.10-rc1.tar.gz
-cd u-boot-2012.10-rc1
+git clone git://git.denx.de/u-boot.git
+cd u-boot/
+git checkout v2013.07 -b tmp
 \end{verbatim}
+
+To apply the patch on top of v2013.07, run the following commands
+
+\begin{verbatim}
+wget https://raw.github.com/eewiki/u-boot-patches/master/v2013.07/0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
+git apply 0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
+\end{verbatim}
+
 
 Get an understanding of its configuration and compilation steps by
 reading the \code{README} file, and specifically the {\em Building the
@@ -130,6 +139,7 @@ Unmount the MMC card partition.
 
 \section{Setting up serial communication with the board}
 
+\section{Beaglebone}
 Plug the BeagleBone on your computer using the USB cable.
 When plugged-in, two USB-to-serial devices should appear.
 \code{/dev/ttyUSB0} is the onboard JTAG.
@@ -137,6 +147,9 @@ When plugged-in, two USB-to-serial devices should appear.
 
 You can also see this device appear by looking at the output of
 \code{dmesg}.
+
+\section{Beaglebone Black}
+TODO
 
 To communicate with the board through the serial port, install a
 serial communication program, such as \code{picocom}:
