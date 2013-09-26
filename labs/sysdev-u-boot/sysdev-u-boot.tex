@@ -19,10 +19,10 @@ very specific to the hardware platform. There are usually two cases:
   which access to the memories is made easier.
 
 \end{itemize}
-The BeagleBone board, which uses the TI AM335X processor, falls into
-the second category. The monitor integrated in the ROM reads the MMC/SD
+The BeagleBone black board, which uses the TI AM335X processor, falls into
+the second category. The monitor integrated in the ROM reads the eMMC
 card to search for a valid bootloader before looking at the internal
-NAND flash for a bootloader. Therefore, by using an MMC/SD card, we can
+NAND flash for a bootloader. Therefore, by using the eMMC card, we can
 start up a OMAP3-based board without having anything installed on it.
 
 \section{Setup}
@@ -31,10 +31,10 @@ Go to the \code{/home/<user>/labs/bootloader/} directory.
 
 \section{MMC/SD card setup}
 
-The ROM monitor can read files from a FAT filesystem on the MMC/SD
-card. However, the MMC/SD card must be carefully partitionned, and the
+The ROM monitor can read files from a FAT filesystem on the eMMC
+card. However, the eMMC card must be carefully partitionned, and the
 filesystem carefully created in order to be recognized by the ROM
-monitor. Here are special instructions to format an MMC/SD card
+monitor. Here are special instructions to format an eMMC card
 for the OMAP-based platforms.
 
 First, connect your card reader to your workstation, with the MMC/SD
@@ -51,7 +51,7 @@ Caution: read this carefully before proceeding. You could destroy
 existing partitions on your PC!
 
 Do not make the confusion between the device that is used by your
-board to represent your MMC/SD disk (probably \code{/dev/sda}), and the device
+board to represent your eMMC disk (probably \code{/dev/sda}), and the device
 that your workstation uses when the card reader is inserted (probably
 \code{/dev/sdb}).
 
@@ -73,7 +73,7 @@ $ sudo umount /dev/sdb2
 ...
 \end{verbatim}
 
-Now, clear possible MMC/SD card contents remaining from previous training
+Now, clear possible eMMC card contents remaining from previous training
 sessions:
 
 \begin{verbatim}
@@ -170,24 +170,12 @@ that it boots your new bootloaders. You can verify this by checking
 the build dates:
 
 \begin{verbatim}
-U-Boot SPL 2012.10-rc1 (Oct 01 2012 - 16:13:08)
-Texas Instruments Revision detection unimplemented
-OMAP SD/MMC: 0
-reading u-boot.img
-reading u-boot.img
+SPL
+TODO
 
+U-Boot
+TODO
 
-U-Boot 2012.10-rc1 (Oct 01 2012 - 16:13:08)
-
-I2C:   ready
-DRAM:  256 MiB
-WARNING: Caches not enabled
-MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
-Using default environment
-
-Net:   cpsw
-Hit any key to stop autoboot:  3
-U-Boot#
 \end{verbatim}
 
 By the message {\em Loading u-boot.img from mmc} you also get the
