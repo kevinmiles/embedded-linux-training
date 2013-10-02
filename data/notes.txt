@@ -1,0 +1,14 @@
+- SD kaart of eMMC?
+- U-Boot usb_ether of cpw/eth?
+
+U-Boot# setenv ethact usb_ether
+
+Kernel + DTS
+- apt-get install device-tree-compiler lzma lzop
+
+uEnv.txt:
+kloadaddr=0x80800000
+devtree=am335x-boneblack.dtb
+dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+uenvcmd=run dtboot
+optargs=consoleblank=0
