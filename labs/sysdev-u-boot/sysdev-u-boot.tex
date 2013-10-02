@@ -21,8 +21,8 @@ very specific to the hardware platform. There are usually two cases:
 \end{itemize}
 The BeagleBone black board, which uses the TI AM335X processor, falls into
 the second category. The monitor integrated in the ROM reads the eMMC
-card to search for a valid bootloader before looking at the internal
-NAND flash for a bootloader. Therefore, by using the eMMC card, we can
+card to search for a valid bootloader before looking at the SD/MMC card slot
+for a bootloader. By using the a SD/MMC card, we can
 start up a OMAP3-based board without having anything installed on it.
 
 \section{Setup}
@@ -106,7 +106,7 @@ To apply the patch on top of v2013.07, run the following commands
 
 \begin{verbatim}
 wget https://raw.github.com/eewiki/u-boot-patches/master/v2013.07/0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
-git apply 0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
+patch -p1 < 0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
 \end{verbatim}
 
 
@@ -139,27 +139,22 @@ Unmount the MMC card partition.
 
 \section{Setting up serial communication with the board}
 
-\section{Beaglebone}
-Plug the BeagleBone on your computer using the USB cable.
-When plugged-in, two USB-to-serial devices should appear.
-\code{/dev/ttyUSB0} is the onboard JTAG.
-\code{/dev/ttyUSB1} is a USB-to-serial device.
-
-You can also see this device appear by looking at the output of
-\code{dmesg}.
-
-\section{Beaglebone Black}
-TODO
+\section{Beaglebone black}
+To connect UART0 on the Beaglebone Black, use the supplied USB FTDI cable.
+When plugged-in, the device will appear as \code{/dev/ttyUSB0}.
 
 To communicate with the board through the serial port, install a
 serial communication program, such as \code{picocom}:
+
+You can also see this device appear by looking at the output of
+\code{dmesg}.
 
 \begin{verbatim}
 sudo apt-get install picocom
 \end{verbatim}
 
-Run \code{sudo picocom -b 115200 /dev/ttyUSB1}, to start serial
-communication on \code{/dev/ttyUSB1}, with a baudrate of 115200. If
+Run \code{sudo picocom -b 115200 /dev/ttyUSB0}, to start serial
+communication on \code{/dev/ttyUSB0}, with a baudrate of 115200. If
 you wish to exit picocom, press \code{[Ctrl][a]} followed by
 \code{[Ctrl][x]}.
 
@@ -170,12 +165,54 @@ that it boots your new bootloaders. You can verify this by checking
 the build dates:
 
 \begin{verbatim}
-SPL
-TODO
+U-Boot 2013.07-dirty (Oct 02 2013 - 13:13:36)
 
-U-Boot
-TODO
+I2C:   ready
+DRAM:  512 MiB
+WARNING: Caches not enabled
+NAND:  0 MiB
+MMC:   OMAP SD/MMC: 0, OMAP SD/MMC: 1
+*** Warning - readenv() failed, using default environment
 
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Peripheral mode controller at 47401000 using PIO, IRQ 0
+musb-hdrc: ConfigData=0xde (UTMI-8, dyn FIFOs, HB-ISO Rx, HB-ISO Tx, SoftConn)
+musb-hdrc: MHDRC RTL version 2.0
+musb-hdrc: setup fifo_mode 4
+musb-hdrc: 28/31 max ep, 16384/16384 memory
+USB Host mode controller at 47401800 using PIO, IRQ 0
+Net:   <ethaddr> not set. Validating first E-fuse MAC
+cpsw, usb_ether
+Hit any key to stop autoboot:  0
+gpio: pin 53 (gpio 53) value is 1
+mmc0 is current device
+gpio: pin 54 (gpio 54) value is 1
+SD/MMC found on device 0
+reading uEnv.txt
+** Unable to read file uEnv.txt **
+gpio: pin 55 (gpio 55) value is 1
+Checking if uenvcmd is set ...
+
+uenvcmd was not defined in uEnv.txt ...
+trying eMMC (BeagleBone Black) ...
+
+mmc_send_cmd : timeout: No status update
+mmc1(part 0) is current device
+mmc_send_cmd : timeout: No status update
+gpio: pin 54 (gpio 54) value is 1
+SD/MMC found on device 1
+reading uEnv.txt
+** Unable to read file uEnv.txt **
+gpio: pin 55 (gpio 55) value is 1
+Checking if uenvcmd is set ...
+
+uenvcmd was not defined in uEnv.txt ...
+halting ...
+
+U-Boot#
 \end{verbatim}
 
 By the message {\em Loading u-boot.img from mmc} you also get the
