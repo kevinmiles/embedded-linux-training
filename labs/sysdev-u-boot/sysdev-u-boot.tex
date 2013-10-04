@@ -97,16 +97,14 @@ We will use U-Boot v2013.07, plus a patch to fix some issues specific for the be
 Go to the \code{/home/<user>/labs/bootloader/} directory.
 
 \begin{verbatim}
-git clone git://git.denx.de/u-boot.git
-cd u-boot/
-git checkout v2013.07 -b tmp
+tar xvf u-boot-2013.07.tar.bz2
+cd u-boot-2013.07
 \end{verbatim}
 
-To apply the patch on top of v2013.07, run the following commands
+To apply the patch on top of v2013.07, run the following command
 
 \begin{verbatim}
-wget https://raw.github.com/eewiki/u-boot-patches/master/v2013.07/0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
-patch -p1 < 0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
+patch -p1 < ../0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch
 \end{verbatim}
 
 
