@@ -12,3 +12,11 @@ devtree=am335x-boneblack.dtb
 dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
 uenvcmd=run dtboot
 optargs=consoleblank=0
+
+---
+flash eMMC:
+- Image to flash eMMC: http://beagleboard.org/latest-images
+- dd image to a SD card and boot it
+- wait until all 4 leds stay lit up, this will take about 45 minutes
+
+
