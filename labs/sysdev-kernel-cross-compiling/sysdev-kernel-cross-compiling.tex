@@ -12,21 +12,24 @@ After this lab, you will be able to:
 \section{Setup}
 
 Go to the \code{/home/<user>/labs/kernel} directory.
-Extract \code{kernel-angstrom.tar.gz} in the current folder.
+Extract \code{kernel-bbb.tar.xz} in the current folder.
 
 \begin{verbatim}
-tar -xf kernel-angstrom.tar.gz
+tar -xf kernel-bbb.tar.xz
 \end{verbatim}
 
-Install the following packages: \code{libqt4-dev} and
-\code{u-boot-tools}. \code{libqt4-dev} is needed for the
+TODO: lzma/lzop nodig ?
+
+Install the following packages: \code{libqt4-dev}, \code{u-boot-tools} and
+\code{device-tree-compiler}. \code{libqt4-dev} is needed for the
 \code{xconfig} kernel configuration interface, and \code{u-boot-tools}
 is needed to build the \code{uImage} kernel image file for U-Boot.
+\code{device-tree-compiler} is needed to build a device tree blob which decribes our hardware.
 
 \section{Target system}
 
 We are going to cross-compile and boot a Linux kernel for the BeagleBone
-board.
+Black board.
 
 \section{Cross-compiling environment setup}
 
@@ -54,12 +57,12 @@ ready-made configuration.
 Don't hesitate to visualize the new settings by running
 \code{make menuconfig} or \code{make xconfig} afterwards!
 
-There is a config provided, the \code{defconfig} file in the \code{~/labs/kernel} folder.
+There is a config provided, the \code{beaglebone_defconfig} file in the \code{~/labs/kernel} folder.
 To use the config file do the following:
 
 \begin{verbatim}
 make distclean
-cp defconfig .config
+cp beaglebone_defconfig .config
 make oldconfig
 \end{verbatim}
 
@@ -99,7 +102,7 @@ make uImage
 
 \section{Setting up serial communication with the board}
 
-Plug the BeagleBone board on your computer. Start Picocom on \code{/dev/ttyUSB1}
+Plug the BeagleBone board on your computer. Start Picocom on \code{/dev/ttyUSB0}
 
 You should now see the U-Boot prompt:
 
