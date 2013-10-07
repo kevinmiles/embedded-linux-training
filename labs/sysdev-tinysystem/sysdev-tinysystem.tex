@@ -35,21 +35,6 @@ target to test the impact of script or application updates.
 
 \section{Setup}
 
-U-Boot and the kernel are built with our own cross compiler.
-To build BusyBox and all following applications and libs, we are going the use another cross copiler.
-
-Go to the \code{/home/<user>/labs/toolchain/} directory.
-Extract the tarball and add the compiler to your PATH variable.
-on't forget the remove the other cross compiler.
-
-\begin{verbatim}
-tar -xf angstrom-2011.03-i686-linux-armv7a-linux-gnueabi-toolchain.tar.bz2
-export PATH=$PATH:~/labs/toolchain/usr/local/angstrom/arm/bin/
-\end{verbatim}
-
-To keep the \code{PATH} variable edit your \code{.bashrc} file in your home directory.
-Remember not the use \code{arm-linux-} anymore, but use \code{arm-angstrom-linux-gnueabi-} for the \code{CROSS_COMPILE} variable.
-
 Now go to the \code{/home/<user>/labs/busybox/} directory.
 
 \section{Kernel configuration}
