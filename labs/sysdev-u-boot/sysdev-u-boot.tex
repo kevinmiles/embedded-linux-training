@@ -31,10 +31,10 @@ Go to the \code{/home/<user>/labs/bootloader/} directory.
 
 \section{MMC/SD card setup}
 
-The ROM monitor can read files from a FAT filesystem on the eMMC
-card. However, the eMMC card must be carefully partitionned, and the
+The ROM monitor can read files from a FAT filesystem on the SD
+card. However, the SD card must be carefully partitionned, and the
 filesystem carefully created in order to be recognized by the ROM
-monitor. Here are special instructions to format an eMMC card
+monitor. Here are special instructions to format an SD card
 for the OMAP-based platforms.
 
 First, connect your card reader to your workstation, with the MMC/SD
@@ -73,7 +73,7 @@ $ sudo umount /dev/sdb2
 ...
 \end{verbatim}
 
-Now, clear possible eMMC card contents remaining from previous training
+Now, clear possible SD card contents remaining from previous training
 sessions:
 
 \begin{verbatim}
@@ -88,6 +88,8 @@ The process to create 2 valid partitions on the SD card can be done using the fo
 sudo ./mkcard.sh /dev/sd[x]
 \end{verbatim}
 Check the script to see what it does and what commands are used.
+
+\emph{NOTE: If you have problems booting the SD card on the Beaglebone, try to format the first partition as FAT16 (line 68 of mkcard.sh) }
 
 
 \section{U-Boot setup}
