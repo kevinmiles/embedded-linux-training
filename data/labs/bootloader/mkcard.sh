@@ -38,7 +38,7 @@ if [ -x `which kpartx` ]; then
 fi
 
 # handle various device names.
-# note something like fdisk -l /dev/loop0 | egrep -E '^/dev' | cut -d' ' -f1 
+# note something like fdisk -l /dev/loop0 | egrep -E '^/dev' | cut -d' ' -f1
 # won't work due to https://bugzilla.redhat.com/show_bug.cgi?id=649572
 
 PARTITION1=${DRIVE}1
@@ -65,14 +65,14 @@ fi
 # now make partitions.
 if [ -b ${PARTITION1} ]; then
 	umount ${PARTITION1}
-	mkfs.vfat -F 32 -n "boot" ${PARTITION1}
+	mkfs.vfat -F 16 -n "boot" ${PARTITION1}
 else
 	echo "Cant find boot partition in /dev"
 fi
 
 if [ -b ${PARITION2} ]; then
 	umount ${PARTITION2}
-	mke2fs -j -L "rootfs" ${PARTITION2} 
+	mkfs.ext4 -L "rootfs" ${PARTITION2}
 else
 	echo "Cant find rootfs partition in /dev"
 fi

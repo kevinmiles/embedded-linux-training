@@ -16,13 +16,13 @@ Extract \code{kernel-bbb.tar.xz} in the current folder.
 
 \begin{verbatim}
 tar -xf kernel-bbb.tar.xz
+cd kernel-bbb
 \end{verbatim}
 
-TODO: lzma/lzop nodig ?
+Install the following packages:
+\code{libqt4-dev}, \code{u-boot-tools}, \code{device-tree-compiler} and \code{lzop}.
 
-Install the following packages: \code{libqt4-dev}, \code{u-boot-tools} and
-\code{device-tree-compiler}. \code{libqt4-dev} is needed for the
-\code{xconfig} kernel configuration interface, and \code{u-boot-tools}
+\code{libqt4-dev} is needed for the \code{xconfig} kernel configuration interface, and \code{u-boot-tools}
 is needed to build the \code{uImage} kernel image file for U-Boot.
 \code{device-tree-compiler} is needed to build a device tree blob which decribes our hardware.
 
@@ -75,7 +75,7 @@ expense of a higher decompression time.
 
 Before we compile the kernel, we need to copy a firmware file the correct source folder.
 \begin{verbatim}
-cp am335x-pm-firmware.bin firmware/am335x-pm-firmware.bin
+cp ../am335x-pm-firmware.bin firmware/am335x-pm-firmware.bin
 \end{verbatim}
 
 You're now ready to cross-compile your kernel. Simply run:
@@ -100,6 +100,17 @@ the kernel image, simply run:
 make uImage
 \end{verbatim}
 
+\section{Device Tree}
+The Device Tree is a data structure for describing hardware.
+After we built the kernel we need to build the Device Tree blob,
+by running the following command:
+
+\begin{verbatim}
+make dtbs
+\end{verbatim}
+
+Look in the \code{arch/arm/boot/?} folder and copy the correct \code{.dtb} file to the first partition of the SD card.
+
 \section{Setting up serial communication with the board}
 
 Plug the BeagleBone board on your computer. Start Picocom on \code{/dev/ttyUSB0}
@@ -108,6 +119,18 @@ You should now see the U-Boot prompt:
 
 \begin{verbatim}
 U-Boot #
+\end{verbatim}
+
+To be able to boot the kernel we need to configure some U-Boot variables.
+Create the file \code{uEnv.txt} on the first partition of the SD card.
+Add the following lines:
+
+\begin{verbatim}
+kloadaddr=0x80800000
+devtree=am335x-boneblack.dtb
+dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+uenvcmd=run dtboot
+optargs=consoleblank=0
 \end{verbatim}
 
 \section{Load and boot the kernel using U-Boot}
