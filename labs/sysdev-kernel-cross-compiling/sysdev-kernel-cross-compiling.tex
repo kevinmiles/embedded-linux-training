@@ -62,7 +62,7 @@ To use the config file do the following:
 
 \begin{verbatim}
 make distclean
-cp beaglebone_defconfig .config
+cp ../beaglebone_defconfig .config
 make oldconfig
 \end{verbatim}
 
@@ -75,7 +75,7 @@ expense of a higher decompression time.
 
 Before we compile the kernel, we need to copy a firmware file the correct source folder.
 \begin{verbatim}
-cp ../am335x-pm-firmware.bin firmware/am335x-pm-firmware.bin
+cp ../am335x-pm-firmware.bin firmware/
 \end{verbatim}
 
 You're now ready to cross-compile your kernel. Simply run:
@@ -109,7 +109,7 @@ by running the following command:
 make dtbs
 \end{verbatim}
 
-Look in the \code{arch/arm/boot/?} folder and copy the correct \code{.dtb} file to the first partition of the SD card.
+Look in the \code{arch/arm/boot/dts} folder and copy the correct \code{.dtb} file to the first partition of the SD card.
 
 \section{Setting up serial communication with the board}
 
