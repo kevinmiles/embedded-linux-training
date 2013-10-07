@@ -65,7 +65,7 @@ fi
 # now make partitions.
 if [ -b ${PARTITION1} ]; then
 	umount ${PARTITION1}
-	mkfs.vfat -F 16 -n "boot" ${PARTITION1}
+	mkfs.vfat -F 32 -n "boot" ${PARTITION1}
 else
 	echo "Cant find boot partition in /dev"
 fi
