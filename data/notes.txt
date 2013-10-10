@@ -26,5 +26,19 @@ mkfs.vfat -F 32 -n "boot" ${PARTITION1}
 to
 mkfs.vfat -F 16 -n "boot" ${PARTITION1}
 to format the first partition as FAT16 (depends on the SD card being used)
+---
+
+uEnv.txt for NFS root:
+
+serverip=192.168.128.142
+ipaddr=192.168.128.101
+kloadaddr=0x80800000
+devtree=am335x-boneblack.dtb
+dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+uenvcmd=run dtboot
+optargs=consoleblank=0
+bootcmd=run findfdt; run loadbootenv; run importbootenv;
+mmcargs=setenv bootargs console=${console} ${optargs} root=/dev/nfs ip=${ipaddr} nfsroot=${serverip}:/home/jordy/nfsroot rw
+
 
 
