@@ -128,7 +128,9 @@ Add the following lines:
 \begin{verbatim}
 kloadaddr=0x80800000
 devtree=am335x-boneblack.dtb
-dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; \
+    fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; \
+    bootm ${kloadaddr} - ${fdtaddr}
 uenvcmd=run dtboot
 optargs=consoleblank=0
 \end{verbatim}
