@@ -1,0 +1,75 @@
+
+TODO:
+~/werk/embedded-linux-training/data/labs to tarball to expand in home dir
+
+SOLUTION:
+~/werk/embedded-linux-training/data/labs -> ~/labs
+
+SDCARD: DONT USE mkcard.sh, just use (~/cfcard/cfcard.img)
+sudo dd if=cfcard.img of=/dev/sdX bs=1M
+sync
+unplug and replug.
+-> should mount 2 partitions
+
+U-boot:
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-
+make am335x_evm_config
+make -j4 > /dev/null
+
+cp MLO /media/boot
+cp u-boot.img /media/boot
+umount /media/*
+
+CONNECTING:
+- tty2USB: black-line (JDT) on pin1 (with white dot)
+- picocom -b 115200 /dev/ttyUSB0
+
+=== DAY1 ===
+doesn't work booting from CARD, doesn't say holding USER button
+    BOOT board into Linux (just wait). Laptop should auto-monut /media/BEAGLEBONE
+    rm MLO u-boot.img uEnv.txt
+    (on console: also type sync)
+
+=== LAB ROOTFS WITH BUSYBOX ===
+busybox:
+$ make ARCH=arm CROSS_COMPILE=arm-linux- defconfig
+$ make ARCH=arm CROSS_COMPILE=arm-linux- menuconfig
+    -> change CONFIG_PREFIX to "/home/<user>/labs/busybox/nfsroot"
+    -> change to static build
+$ make ARCH=arm CROSS_COMPILE=arm-linux- install
+
+uEnv.txt for NFSboot:
+kloadaddr=0x80800000
+devtree=am335x-boneblack.dtb
+dtboot=run mmcargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+nfsargs=setenv bootargs console=ttyO0,115200 root=/dev/nfs ip=192.168.128.193 nfsroot=192.168.128.143:/home/altenpts/labs/busybox/nfsroot
+nfsboot=run nfsargs; fatload mmc ${mmcdev}:1 ${kloadaddr} ${bootfile} ; fatload mmc ${mmcdev}:1 ${fdtaddr} ${devtree} ; bootm ${kloadaddr} - ${fdtaddr}
+uenvcmd=run nfsboot
+optargs=consoleblank=0
+
+FIX /dev/ nodes: (in nfsroot)
+sudo mknod tty2 c 4 2
+sudo mknod tty3 c 4 3
+sudo mknod tty4 c 4 4
+-> boots!
+
+EXTRA: make sure /proc and /sysfs are mounted at boot
+host: mkdir proc sys
+target:
+    mount -t proc none /proc
+    mount -t sysfs none /sys
+
+need inittab + /etc/init.d/rcS file (solution)
+
+Hello world:
+static: arm-linux-gcc hello.c -o hello -static
+dynamic: arm-linux-gcc hello.c -o hello
+
+Dynamic: copy sysroot dir from /usr/local/xtools/.. to board
+
+==== LAB BLOCK FILESYSTEMS ====
+
+
+
+
